@@ -8,10 +8,10 @@ app.use(express.json());
 const PORT = 8080;
 const WATI_TOKEN = process.env.WATI_TOKEN;
 
-const sendMessageToUser = async (text) => {
-  const messageText = `Hello, Thanks For Showing Interest in our Programme`;
-  if (text.toLowerCase() == "interested") {
-    const url = `https://live-server-105694.wati.io/api/v1/sendSessionMessage/917018178377?messageText=${messageText}`;
+const sendMessageToUser = async (text, number) => {
+  const messageText = `Hello, Thanks For Showing Interest in our Programme, This message is coming through WATI webhook`;
+  if (text.toLowerCase() == "meinterestedwebhooktest") {
+    const url = `https://live-server-105694.wati.io/api/v1/sendSessionMessage/${number}?messageText=${messageText}`;
     const options = {
       method: "POST",
       headers: { Authorization: `Bearer ${WATI_TOKEN}` },
@@ -25,8 +25,9 @@ const sendMessageToUser = async (text) => {
 
 app.post("/", async (req, res) => {
   try {
-    const { text } = req.body;
-    const data = await sendMessageToUser(text);
+    const { text, waId } = req.body;
+    console.log(req.body);
+    const data = await sendMessageToUser(text, waId);
     res.send({
       data,
       status: "success",
